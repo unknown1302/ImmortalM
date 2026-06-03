@@ -527,11 +527,11 @@ ShowUpdatePopup(latestVersion)
     ; =========================
     ; CONTENT
     ; =========================
-    msg :=
-    "IMMORTALM UPDATE AVAILABLE`r`n`r`n"
-    "Current Version: " VERSION "`r`n"
-    "Latest Version: " latestVersion "`r`n`r`n"
-    "UPDATE NOW!!!"
+    msg := ""
+    msg .= "IMMORTALM UPDATE AVAILABLE`r`n`r`n"
+    msg .= "Current Version: " VERSION "`r`n"
+    msg .= "Latest Version: " latestVersion "`r`n`r`n"
+    msg .= "UPDATE NOW!!!"
 
     UpdateGui.AddText(
         "x20 y45 w260 Center",
