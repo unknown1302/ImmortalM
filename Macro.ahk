@@ -506,7 +506,7 @@ ShowUpdatePopup(latestVersion)
 
     MainGui.Opt("+Disabled")
 
-    UpdateGui := Gui("+Owner" MainGui.Hwnd " +AlwaysOnTop -MinimizeBox -MaximizeBox -SysMenu", "New Update")
+    UpdateGui := Gui("+AlwaysOnTop -Caption +Border", "New Update")
     UpdateGui.BackColor := 0x1E1E1E
     UpdateGui.SetFont("s9 cWhite", "Segoe UI")
     UpdateGui.SetDarkTitle()
