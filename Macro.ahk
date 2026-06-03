@@ -506,7 +506,7 @@ ShowUpdatePopup(latestVersion)
 
     MainGui.Opt("+Disabled")
 
-    UpdateGui := Gui("+Owner" MainGui.Hwnd " +AlwaysOnTop -MinimizeBox -MaximizeBox -SysMenu")
+    UpdateGui := Gui("+Owner" MainGui.Hwnd " +AlwaysOnTop -MinimizeBox -MaximizeBox -SysMenu", "New Update")
     UpdateGui.BackColor := 0x1E1E1E
     UpdateGui.SetFont("s9 cWhite", "Segoe UI")
     UpdateGui.SetDarkTitle()
@@ -531,7 +531,6 @@ ShowUpdatePopup(latestVersion)
     msg .= "IMMORTALM UPDATE AVAILABLE`r`n`r`n"
     msg .= "Current Version: " VERSION "`r`n"
     msg .= "Latest Version: " latestVersion "`r`n`r`n"
-    msg .= "UPDATE NOW!!!"
 
     UpdateGui.AddText(
         "x20 y45 w260 Center",
