@@ -659,7 +659,7 @@ CreateRestartScript()
     batFile := A_ScriptDir "\Update.bat"
 
     bat := "@echo off`r`n"
-    bat .= "timeout /t 10 >nul`r`n"
+    bat .= "timeout /t 2 >nul`r`n"
     bat .= 'copy /y "' tempFile '" "' A_ScriptDir '\Macro.ahk" >nul`r`n'
     bat .= 'start "" "' A_ScriptDir '\Macro.ahk"`r`n'
     bat .= 'del "' tempFile '" >nul`r`n'
@@ -669,7 +669,7 @@ CreateRestartScript()
 
     FileAppend(bat, batFile)
 
-    Run(A_ComSpec ' /c "' batFile '"')
+    Run('"' batFile '"',, "Hide")
     ExitApp()
 }
 
