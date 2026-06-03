@@ -494,7 +494,9 @@ CheckForUpdates()
 
         if FileExist(tempFile)
         {
-            MsgBox "Downloaded successfully:`n" tempFile
+            MsgBox "Downloaded"
+
+            CreateRestartScript()
         }
         else
         {
@@ -521,6 +523,24 @@ DownloadFile(url, savePath)
     file := FileOpen(savePath, "w", "UTF-8-RAW")
     file.Write(whr.ResponseText)
     file.Close()
+}
+CreateRestartScript()
+{
+    tempFile := A_ScriptDir "\Macro.new"
+    batFile := A_ScriptDir "\Update.bat"
+
+    bat := "@echo off`r`n"
+    bat .= "timeout /t 2 >nul`r`n"
+    bat .= 'copy /y "' tempFile '" "' A_ScriptDir '\Macro.ahk" >nul`r`n'
+    bat .= 'start "" "' A_ScriptDir '\Macro.ahk"`r`n'
+    bat .= 'del "' tempFile '" >nul`r`n'
+    bat .= 'del "%~f0"`r`n'
+
+    try FileDelete(batFile)
+
+    FileAppend(bat, batFile)
+
+    MsgBox bat
 }
 
 ; =========================================================
