@@ -503,6 +503,7 @@ CheckForUpdates()
 ShowUpdatePopup(latestVersion)
 {
     global MainGui, UpdateGui, VERSION
+    global UpdateProgress, UpdateStatus  ; ✅ ADD THIS
 
     MainGui.Opt("+Disabled")
 
@@ -519,7 +520,6 @@ ShowUpdatePopup(latestVersion)
         "New Update"
     )
 
-    ; separator line
     UpdateGui.AddText(
         "x10 y30 w280 h1 Background404040"
     )
@@ -528,8 +528,8 @@ ShowUpdatePopup(latestVersion)
     ; CONTENT
     ; =========================
     UpdateGui.AddText(
-    "x20 y45 w260 Center",
-    "IMMORTALM UPDATE AVAILABLE"
+        "x20 y45 w260 Center",
+        "IMMORTALM UPDATE AVAILABLE"
     )
 
     UpdateGui.AddText(
@@ -543,16 +543,29 @@ ShowUpdatePopup(latestVersion)
     )
 
     ; =========================
+    ; PROGRESS BAR (NEW - ADD ONLY)
+    ; =========================
+    UpdateStatus := UpdateGui.AddText(
+        "x20 y110 w260 Center cAAAAAA",
+        "Waiting..."
+    )
+
+    UpdateProgress := UpdateGui.AddProgress(
+        "x20 y130 w260 h12 Range0-100",
+        0
+    )
+
+    ; =========================
     ; BUTTON
     ; =========================
     btnUpdate := UpdateGui.AddButton(
-        "x50 y125 w200 h35",
+        "x50 y150 w200 h35",
         "UPDATE NOW!!!"
     )
 
     btnUpdate.SetBackColor(0x00B86B,,9)
     btnUpdate.TextColor := 0xFFFFFF
-    btnUpdate.OnEvent("Click", (*) => StartUpdate(latestVersion))
+    btnUpdate.OnEvent("Click", (*) => RunUpdateProgress(latestVersion))
 
     ; =========================
     ; BLOCK CLOSING (DISABLE X)
@@ -560,7 +573,44 @@ ShowUpdatePopup(latestVersion)
     UpdateGui.OnEvent("Close", (*) => 0)
     UpdateGui.OnEvent("Escape", (*) => 0)
 
-    UpdateGui.Show("w300 h180 Center")
+    UpdateGui.Show("w300 h200 Center")
+}
+RunUpdateProgress(latestVersion)
+{
+    global UpdateProgress, UpdateStatus, UpdateGui
+
+    UpdateStatus.Text := "Starting update..."
+    UpdateProgress.Value := 0
+
+    Sleep 200
+
+    UpdateStatus.Text := "Downloading update..."
+    UpdateProgress.Value := 20
+
+    Sleep 300
+
+    UpdateStatus.Text := "Checking files..."
+    UpdateProgress.Value := 45
+
+    Sleep 300
+
+    UpdateStatus.Text := "Applying update..."
+    UpdateProgress.Value := 70
+
+    Sleep 400
+
+    UpdateStatus.Text := "Finalizing..."
+    UpdateProgress.Value := 90
+
+    Sleep 400
+
+    UpdateProgress.Value := 100
+    UpdateStatus.Text := "Complete"
+
+    Sleep 400
+
+    ; now call your REAL updater
+    StartUpdate()
 }
 StartUpdate(*)
 {
