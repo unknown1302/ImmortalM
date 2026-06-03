@@ -527,14 +527,19 @@ ShowUpdatePopup(latestVersion)
     ; =========================
     ; CONTENT
     ; =========================
-    msg := ""
-    msg .= "IMMORTALM UPDATE AVAILABLE`r`n`r`n"
-    msg .= "Current Version: " VERSION "`r`n"
-    msg .= "Latest Version: " latestVersion "`r`n`r`n"
+    UpdateGui.AddText(
+    "x20 y45 w260 Center",
+    "IMMORTALM UPDATE AVAILABLE"
+    )
 
     UpdateGui.AddText(
-        "x20 y45 w260 Center",
-        msg
+        "x20 y70 w260 Center",
+        "Current Version: " VERSION
+    )
+
+    UpdateGui.AddText(
+        "x20 y95 w260 Center",
+        "Latest Version: " latestVersion
     )
 
     ; =========================
@@ -547,7 +552,7 @@ ShowUpdatePopup(latestVersion)
 
     btnUpdate.SetBackColor(0x00B86B,,9)
     btnUpdate.TextColor := 0xFFFFFF
-    btnUpdate.OnEvent("Click", StartUpdate)
+    btnUpdate.OnEvent("Click", (*) => StartUpdate(latestVersion))
 
     ; =========================
     ; BLOCK CLOSING (DISABLE X)
