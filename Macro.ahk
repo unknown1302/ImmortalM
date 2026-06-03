@@ -482,9 +482,23 @@ CheckForUpdates()
 
 CheckForUpdates()
 {
+    global VERSION
     global VersionURL
 
     json := DownloadText(VersionURL)
+
+    if !RegExMatch(json, '"version"\s*:\s*"([^"]+)"', &v)
+        return
+
+    latestVersion := v[1]
+
+    if (latestVersion = VERSION)
+    {
+        MsgBox "Already latest version"
+        return
+    }
+
+    MsgBox "Update available:`n`nCurrent: " VERSION "`nLatest: " latestVersion
 
     if RegExMatch(json, '"download"\s*:\s*"([^"]+)"', &d)
     {
@@ -497,10 +511,6 @@ CheckForUpdates()
             MsgBox "Downloaded"
 
             CreateRestartScript()
-        }
-        else
-        {
-            MsgBox "Download failed"
         }
     }
 }
