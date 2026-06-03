@@ -76,7 +76,7 @@ global LaunchCooldown := 10
 global LaunchCountdown := 0
 global SettingsFile := A_ScriptDir "\settings.ini"
 
-global VERSION := "1.0.0"
+global VERSION := "1.0.1"
 
 global VersionURL :=
 "https://raw.githubusercontent.com/unknown1302/ImmortalM/main/version.json"
