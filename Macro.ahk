@@ -482,7 +482,25 @@ CheckForUpdates()
 
 CheckForUpdates()
 {
-    MsgBox "Update available!"
+    try
+    {
+        text := DownloadText(VersionURL)
+        MsgBox text
+    }
+    catch as e
+    {
+        MsgBox e.Message
+    }
+}
+
+DownloadText(url)
+{
+    whr := ComObject("WinHttp.WinHttpRequest.5.1")
+
+    whr.Open("GET", url, false)
+    whr.Send()
+
+    return whr.ResponseText
 }
 
 ; =========================================================
