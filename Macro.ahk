@@ -44,7 +44,7 @@ if !A_IsAdmin
 ; GLOBALS
 ; =========================================================
 
-global VERSION := "v2.1"
+;global VERSION := "v2.1"
 global AUTHOR := "Developed by Yunha"
 
 global Actions := []
@@ -74,6 +74,9 @@ global CabalCounter := 0
 global ClientMap := Map()
 global LaunchCooldown := 10
 global LaunchCountdown := 0
+global UpdateGui := ""
+global TempUpdateFile := A_ScriptDir "\Macro.new"
+global UpdateBat := A_ScriptDir "\Update.bat"
 global SettingsFile := A_ScriptDir "\settings.ini"
 
 global VERSION := "1.0.1"
@@ -493,12 +496,55 @@ CheckForUpdates()
     latestVersion := v[1]
 
     if (latestVersion = VERSION)
-    {
-        MsgBox "Already latest version"
         return
-    }
 
-    MsgBox "Update available:`n`nCurrent: " VERSION "`nLatest: " latestVersion
+    ShowUpdatePopup(latestVersion)
+}
+ShowUpdatePopup(latestVersion)
+{
+    global MainGui
+    global UpdateGui
+
+    MainGui.Opt("+Disabled")
+
+    UpdateGui := Gui("+Owner" MainGui.Hwnd " +AlwaysOnTop")
+
+    UpdateGui.BackColor := 0x1E1E1E
+    UpdateGui.SetFont("s9 cWhite", "Segoe UI")
+
+    UpdateGui.AddText(
+        "x20 y20 w260 Center",
+        "New version available!"
+    )
+
+    UpdateGui.AddText(
+        "x20 y45 w260 Center",
+        "Latest Version: " latestVersion
+    )
+
+    btnUpdate := UpdateGui.AddButton(
+        "x50 y85 w200 h35",
+        "UPDATE NOW!!!"
+    )
+
+    btnUpdate.SetBackColor(0x00B86B,,9)
+    btnUpdate.TextColor := 0xFFFFFF
+
+    btnUpdate.OnEvent(
+        "Click",
+        StartUpdate
+    )
+
+    UpdateGui.Show("w300 h140")
+}
+StartUpdate(*)
+{
+    global UpdateGui
+    global VersionURL
+
+    UpdateGui.Destroy()
+
+    json := DownloadText(VersionURL)
 
     if RegExMatch(json, '"download"\s*:\s*"([^"]+)"', &d)
     {
@@ -508,8 +554,6 @@ CheckForUpdates()
 
         if FileExist(tempFile)
         {
-            MsgBox "Downloaded"
-
             CreateRestartScript()
         }
     }
