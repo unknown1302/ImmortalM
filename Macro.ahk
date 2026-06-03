@@ -76,7 +76,7 @@ global LaunchCooldown := 10
 global LaunchCountdown := 0
 global SettingsFile := A_ScriptDir "\settings.ini"
 
-global VERSION := "1.0.0"
+global VERSION := "1.0.1"
 
 global VersionURL :=
 "https://raw.githubusercontent.com/unknown1302/ImmortalM/main/version.json"
@@ -530,7 +530,7 @@ CreateRestartScript()
     batFile := A_ScriptDir "\Update.bat"
 
     bat := "@echo off`r`n"
-    bat .= "timeout /t 2 >nul`r`n"
+    bat .= "timeout /t 10 >nul`r`n"
     bat .= 'copy /y "' tempFile '" "' A_ScriptDir '\Macro.ahk" >nul`r`n'
     bat .= 'start "" "' A_ScriptDir '\Macro.ahk"`r`n'
     bat .= 'del "' tempFile '" >nul`r`n'
@@ -540,7 +540,8 @@ CreateRestartScript()
 
     FileAppend(bat, batFile)
 
-    MsgBox bat
+    Run(A_ComSpec ' /c "' batFile '"')
+    ExitApp()
 }
 
 ; =========================================================
