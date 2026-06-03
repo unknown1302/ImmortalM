@@ -486,15 +486,20 @@ CheckForUpdates()
 
     json := DownloadText(VersionURL)
 
-    MsgBox json
-
     if RegExMatch(json, '"download"\s*:\s*"([^"]+)"', &d)
     {
-        MsgBox d[1]
-    }
-    else
-    {
-        MsgBox "Download URL not found"
+        tempFile := A_ScriptDir "\Macro.new"
+
+        DownloadFile(d[1], tempFile)
+
+        if FileExist(tempFile)
+        {
+            MsgBox "Downloaded successfully:`n" tempFile
+        }
+        else
+        {
+            MsgBox "Download failed"
+        }
     }
 }
 DownloadText(url)
@@ -505,6 +510,17 @@ DownloadText(url)
     whr.Send()
 
     return whr.ResponseText
+}
+DownloadFile(url, savePath)
+{
+    whr := ComObject("WinHttp.WinHttpRequest.5.1")
+
+    whr.Open("GET", url, false)
+    whr.Send()
+
+    file := FileOpen(savePath, "w", "UTF-8-RAW")
+    file.Write(whr.ResponseText)
+    file.Close()
 }
 
 ; =========================================================
