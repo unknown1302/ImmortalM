@@ -489,18 +489,9 @@ CheckForUpdates()
     {
         json := DownloadText(VersionURL)
 
-        if RegExMatch(json, '"version"\s*:\s*"([^"]+)"', &m)
+        if RegExMatch(json, '"download"\s*:\s*"([^"]+)"', &d)
         {
-            latestVersion := m[1]
-
-            if (latestVersion != VERSION)
-            {
-                MsgBox "Update available!`nCurrent: " VERSION "`nLatest: " latestVersion
-            }
-            else
-            {
-                MsgBox "Already latest version."
-            }
+            MsgBox d[1]
         }
     }
     catch as e
