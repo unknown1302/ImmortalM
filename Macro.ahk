@@ -502,40 +502,61 @@ CheckForUpdates()
 }
 ShowUpdatePopup(latestVersion)
 {
-    global MainGui
-    global UpdateGui
+    global MainGui, UpdateGui, VERSION
 
     MainGui.Opt("+Disabled")
 
-    UpdateGui := Gui("+Owner" MainGui.Hwnd " +AlwaysOnTop")
-
+    UpdateGui := Gui("+Owner" MainGui.Hwnd " +AlwaysOnTop -MinimizeBox -MaximizeBox -SysMenu")
     UpdateGui.BackColor := 0x1E1E1E
     UpdateGui.SetFont("s9 cWhite", "Segoe UI")
+    UpdateGui.SetDarkTitle()
 
+    ; =========================
+    ; TITLE
+    ; =========================
     UpdateGui.AddText(
-        "x20 y20 w260 Center",
-        "New version available!"
+        "x0 y8 w300 Center cFFFFFF",
+        "New Update"
     )
+
+    ; separator line
+    UpdateGui.AddText(
+        "x10 y30 w280 h1 Background404040"
+    )
+
+    ; =========================
+    ; CONTENT
+    ; =========================
+    msg :=
+    "IMMORTALM UPDATE AVAILABLE`r`n`r`n"
+    "Current Version: " VERSION "`r`n"
+    "Latest Version: " latestVersion "`r`n`r`n"
+    "UPDATE NOW!!!"
 
     UpdateGui.AddText(
         "x20 y45 w260 Center",
-        "Latest Version: " latestVersion
+        msg
     )
 
+    ; =========================
+    ; BUTTON
+    ; =========================
     btnUpdate := UpdateGui.AddButton(
-        "x50 y85 w200 h35",
+        "x50 y125 w200 h35",
         "UPDATE NOW!!!"
     )
 
     btnUpdate.SetBackColor(0x00B86B,,9)
     btnUpdate.TextColor := 0xFFFFFF
+    btnUpdate.OnEvent("Click", StartUpdate)
 
-    btnUpdate.OnEvent(
-        "Click",
-        StartUpdate
-    )
+    ; =========================
+    ; BLOCK CLOSING (DISABLE X)
+    ; =========================
+    UpdateGui.OnEvent("Close", (*) => 0)
+    UpdateGui.OnEvent("Escape", (*) => 0)
 
-    UpdateGui.Show("w300 h140")
+    UpdateGui.Show("w300 h180 Center")
 }
 StartUpdate(*)
 {
