@@ -76,7 +76,7 @@ global LaunchCooldown := 10
 global LaunchCountdown := 0
 global SettingsFile := A_ScriptDir "\settings.ini"
 
-global VERSION := "1.0.1"
+global VERSION := "1.0.0"
 
 global VersionURL :=
 "https://raw.githubusercontent.com/unknown1302/ImmortalM/main/version.json"
@@ -482,21 +482,19 @@ CheckForUpdates()
 
 CheckForUpdates()
 {
-    global VERSION
     global VersionURL
 
-    try
-    {
-        json := DownloadText(VersionURL)
+    json := DownloadText(VersionURL)
 
-        if RegExMatch(json, '"download"\s*:\s*"([^"]+)"', &d)
-        {
-            MsgBox d[1]
-        }
-    }
-    catch as e
+    MsgBox json
+
+    if RegExMatch(json, '"download"\s*:\s*"([^"]+)"', &d)
     {
-        MsgBox e.Message
+        MsgBox d[1]
+    }
+    else
+    {
+        MsgBox "Download URL not found"
     }
 }
 DownloadText(url)
