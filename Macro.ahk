@@ -482,17 +482,32 @@ CheckForUpdates()
 
 CheckForUpdates()
 {
+    global VERSION
+    global VersionURL
+
     try
     {
-        text := DownloadText(VersionURL)
-        MsgBox text
+        json := DownloadText(VersionURL)
+
+        if RegExMatch(json, '"version"\s*:\s*"([^"]+)"', &m)
+        {
+            latestVersion := m[1]
+
+            if (latestVersion != VERSION)
+            {
+                MsgBox "Update available!`nCurrent: " VERSION "`nLatest: " latestVersion
+            }
+            else
+            {
+                MsgBox "Already latest version."
+            }
+        }
     }
     catch as e
     {
         MsgBox e.Message
     }
 }
-
 DownloadText(url)
 {
     whr := ComObject("WinHttp.WinHttpRequest.5.1")
