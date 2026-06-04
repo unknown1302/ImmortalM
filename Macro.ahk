@@ -598,11 +598,11 @@ StartUpdate(*)
     btnUpdate.Text := "UPDATING..."
 
     UpdateStatus.Text := "Preparing update..."
-    UpdateProgress.Value := 5
+    AnimateProgress(5)
     Sleep 300
 
     UpdateStatus.Text := "Connecting to server..."
-    UpdateProgress.Value := 10
+    AnimateProgress(10)
     Sleep 300
 
     json := DownloadText(VersionURL)
@@ -625,22 +625,22 @@ StartUpdate(*)
             FileDelete(tempFile)
 
         UpdateStatus.Text := "Downloading update..."
-        UpdateProgress.Value := 25
+        AnimateProgress(25)
 
         DownloadFile(d[1], tempFile)
 
         if FileExist(tempFile)
         {
             UpdateStatus.Text := "Verifying package..."
-            UpdateProgress.Value := 75
+            AnimateProgress(75)
             Sleep 300
 
             UpdateStatus.Text := "Installing update..."
-            UpdateProgress.Value := 90
+            AnimateProgress(90)
             Sleep 300
 
             UpdateStatus.Text := "Launching updated version..."
-            UpdateProgress.Value := 100
+            AnimateProgress(100)
             Sleep 500
 
             UpdateGui.Destroy()
@@ -699,6 +699,16 @@ DownloadFile(url, savePath)
     file := FileOpen(savePath, "w", "UTF-8-RAW")
     file.Write(whr.ResponseText)
     file.Close()
+}
+AnimateProgress(target)
+{
+    global UpdateProgress
+
+    while (UpdateProgress.Value < target)
+    {
+        UpdateProgress.Value += 1
+        Sleep 10
+    }
 }
 CreateRestartScript()
 {
