@@ -78,6 +78,7 @@ global UpdateGui := ""
 global DownloadAnimating := false
 global TempUpdateFile := A_ScriptDir "\Macro.new"
 global UpdateBat := A_ScriptDir "\Update.bat"
+global btnUpdate := ""
 global SettingsFile := A_ScriptDir "\settings.ini"
 
 global VERSION := "1.0.1"
@@ -511,7 +512,8 @@ CheckForUpdates()
 ShowUpdatePopup(latestVersion)
 {
     global MainGui, UpdateGui, VERSION
-    global UpdateProgress, UpdateStatus  ; ✅ ADD THIS
+    global UpdateProgress, UpdateStatus
+    global btnUpdate
 
     MainGui.Opt("+Disabled")
 
@@ -555,7 +557,7 @@ ShowUpdatePopup(latestVersion)
     ; =========================
     UpdateStatus := UpdateGui.AddText(
         "x20 y110 w260 Center cAAAAAA",
-        "Waiting..."
+        "Ready to update"
     )
 
     UpdateProgress := UpdateGui.AddProgress(
@@ -573,7 +575,7 @@ ShowUpdatePopup(latestVersion)
 
     btnUpdate.SetBackColor(0x00B86B,,9)
     btnUpdate.TextColor := 0xFFFFFF
-    btnUpdate.OnEvent("Click", (*) => RunUpdateProgress(latestVersion))
+    btnUpdate.OnEvent("Click", (*) => StartUpdate())
 
     ; =========================
     ; BLOCK CLOSING (DISABLE X)
@@ -583,56 +585,23 @@ ShowUpdatePopup(latestVersion)
 
     UpdateGui.Show("w300 h200 Center")
 }
-RunUpdateProgress(latestVersion)
-{
-    global UpdateProgress, UpdateStatus, UpdateGui
-
-    UpdateStatus.Text := "Starting update..."
-    UpdateProgress.Value := 0
-
-    Sleep 200
-
-    UpdateStatus.Text := "Downloading update..."
-    UpdateProgress.Value := 20
-
-    Sleep 300
-
-    UpdateStatus.Text := "Checking files..."
-    UpdateProgress.Value := 45
-
-    Sleep 300
-
-    UpdateStatus.Text := "Applying update..."
-    UpdateProgress.Value := 70
-
-    Sleep 400
-
-    UpdateStatus.Text := "Finalizing..."
-    UpdateProgress.Value := 90
-
-    Sleep 400
-
-    UpdateProgress.Value := 100
-    UpdateStatus.Text := "Complete"
-
-    Sleep 400
-
-    ; now call your REAL updater
-    StartUpdate()
-}
 StartUpdate(*)
 {
     global UpdateGui
     global MainGui
     global VersionURL
+    global UpdateStatus
+    global UpdateProgress
+    global btnUpdate
 
-    MainGui.Opt("-Disabled")
+    btnUpdate.Enabled := false
+    btnUpdate.Text := "UPDATING..."
 
     UpdateStatus.Text := "Preparing update..."
     UpdateProgress.Value := 5
     Sleep 300
 
-    UpdateStatus.Text := "Connecting to update server..."
+    UpdateStatus.Text := "Connecting to server..."
     UpdateProgress.Value := 10
     Sleep 300
 
@@ -640,6 +609,10 @@ StartUpdate(*)
 
     if (json = "")
     {
+        btnUpdate.Enabled := true
+        btnUpdate.Text := "UPDATE NOW!!!"
+
+        MainGui.Opt("-Disabled")
         MsgBox "Failed to check update."
         return
     }
@@ -666,7 +639,7 @@ StartUpdate(*)
             UpdateProgress.Value := 90
             Sleep 300
 
-            UpdateStatus.Text := "Finishing update..."
+            UpdateStatus.Text := "Launching updated version..."
             UpdateProgress.Value := 100
             Sleep 500
 
@@ -676,11 +649,19 @@ StartUpdate(*)
         }
         else
         {
+            btnUpdate.Enabled := true
+            btnUpdate.Text := "UPDATE NOW!!!"
+
+            MainGui.Opt("-Disabled")
             MsgBox "Update download failed."
         }
     }
     else
     {
+        btnUpdate.Enabled := true
+        btnUpdate.Text := "UPDATE NOW!!!"
+        
+        MainGui.Opt("-Disabled")
         MsgBox "Invalid update information."
     }
 }
