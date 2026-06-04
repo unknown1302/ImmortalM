@@ -75,6 +75,7 @@ global ClientMap := Map()
 global LaunchCooldown := 10
 global LaunchCountdown := 0
 global UpdateGui := ""
+global DownloadAnimating := false
 global TempUpdateFile := A_ScriptDir "\Macro.new"
 global UpdateBat := A_ScriptDir "\Update.bat"
 global SettingsFile := A_ScriptDir "\settings.ini"
@@ -488,7 +489,14 @@ CheckForUpdates()
     global VERSION
     global VersionURL
 
-    json := DownloadText(VersionURL)
+    try
+    {
+        json := DownloadText(VersionURL)
+    }
+    catch
+    {
+        return
+    }
 
     if !RegExMatch(json, '"version"\s*:\s*"([^"]+)"', &v)
         return
@@ -615,39 +623,97 @@ RunUpdateProgress(latestVersion)
 StartUpdate(*)
 {
     global UpdateGui
+    global MainGui
     global VersionURL
 
-    UpdateGui.Destroy()
+    MainGui.Opt("-Disabled")
+
+    UpdateStatus.Text := "Preparing update..."
+    UpdateProgress.Value := 5
+    Sleep 300
+
+    UpdateStatus.Text := "Connecting to update server..."
+    UpdateProgress.Value := 10
+    Sleep 300
 
     json := DownloadText(VersionURL)
+
+    if (json = "")
+    {
+        MsgBox "Failed to check update."
+        return
+    }
 
     if RegExMatch(json, '"download"\s*:\s*"([^"]+)"', &d)
     {
         tempFile := A_ScriptDir "\Macro.new"
 
+        if FileExist(tempFile)
+            FileDelete(tempFile)
+
+        UpdateStatus.Text := "Downloading update..."
+        UpdateProgress.Value := 25
+
         DownloadFile(d[1], tempFile)
 
         if FileExist(tempFile)
         {
+            UpdateStatus.Text := "Verifying package..."
+            UpdateProgress.Value := 75
+            Sleep 300
+
+            UpdateStatus.Text := "Installing update..."
+            UpdateProgress.Value := 90
+            Sleep 300
+
+            UpdateStatus.Text := "Finishing update..."
+            UpdateProgress.Value := 100
+            Sleep 500
+
+            UpdateGui.Destroy()
+
             CreateRestartScript()
         }
+        else
+        {
+            MsgBox "Update download failed."
+        }
+    }
+    else
+    {
+        MsgBox "Invalid update information."
     }
 }
 DownloadText(url)
 {
     whr := ComObject("WinHttp.WinHttpRequest.5.1")
 
-    whr.Open("GET", url, false)
-    whr.Send()
+    try
+    {
+        whr.Open("GET", url, false)
+        whr.Send()
 
-    return whr.ResponseText
+        return whr.ResponseText
+    }
+    catch
+    {
+        return ""
+    }
 }
 DownloadFile(url, savePath)
 {
     whr := ComObject("WinHttp.WinHttpRequest.5.1")
 
-    whr.Open("GET", url, false)
-    whr.Send()
+    try
+    {
+        whr.Open("GET", url, false)
+        whr.Send()
+    }
+    catch
+    {
+        MsgBox "Download failed."
+        return
+    }
 
     file := FileOpen(savePath, "w", "UTF-8-RAW")
     file.Write(whr.ResponseText)
