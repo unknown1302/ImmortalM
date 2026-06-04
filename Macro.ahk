@@ -639,7 +639,7 @@ StartUpdate(*)
             AnimateProgress(90)
             Sleep 300
 
-            UpdateStatus.Text := "Launching updated version..."
+            UpdateStatus.Text := "Update installed successfully"
             AnimateProgress(100)
             Sleep 500
 
