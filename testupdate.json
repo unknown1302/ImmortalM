@@ -2,12 +2,7 @@
   "version": "1.0.4",
   "download": "https://github.com/unknown1302/ImmortalM/releases/download/v1.0.4/update.zip",
   "required": [
-    "ImmortalMLauncher.exe",
+    "ImmortalLauncher.exe",
     "ImmortalM.dll"
-  ],
-  "notes": [
-    "Python launcher migration test",
-    "Main macro update",
-    "Backend DLL update"
   ]
 }
