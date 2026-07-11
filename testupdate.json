@@ -2,7 +2,7 @@
   "version": "1.0.4",
   "download": "https://github.com/unknown1302/ImmortalM/releases/download/v1.0.4/update.zip",
   "required": [
-    "ImmortalLauncher.exe",
+    "ImmortalMLauncher.exe",
     "ImmortalM.dll"
   ]
 }
