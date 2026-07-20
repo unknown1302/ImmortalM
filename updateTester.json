@@ -1,7 +1,7 @@
 {
   "version": "1.0.5",
   "download": "https://github.com/unknown1302/ImmortalM/releases/download/v1.0.5/update.zip",
-  "sha256": "396AFACA012369C03AB37B74658D414ADCD33574084D54FCD82478D8472570D0",
+  "sha256": "014107CBF0D5A8CFEDA020EE12EF35B8C537512A86D13578B46A2A4D16E6E773",
   "required": [
     "ImmortalMLauncher.exe",
     "ImmortalMCore.exe",
